@@ -1,0 +1,36 @@
+
+##################################################		Menu De Calculadora		#######################################################
+
+Seja bem vindo ao MENU HELP da calculadora.
+Ao iniciar a calculadora, aparecera um menu com varias funcionalidades da mesma com a mensagem "Escolha um numero associado a operação, pelo que cada 
+uma faz uma operação com a explicação da mesma abaixo descrita:
+
+Escolha um numero associado á operação:
+ 1- Soma	-----------------------------------> fazer a soma entre dois números
+ 2- Subtração	-----------------------------------> fazer a subtração entre dois números
+ 3- Multiplicação  --------------------------------> fazer a multiplicação entre dois números
+ 4- Divisão	-----------------------------------> fazer a divisão entre dois números(sendo o primeiro o dividendo e segundo o divisor)
+ 5- Fatorial	-----------------------------------> fazer o fatorial de um número
+ 6- Conversão de bases decimal para binário -------> fazer a conversão de um número introduzido em base decimal para um número binário
+ 7- Conversão de base binário para decimal  -------> fazer a conversão de um número introduzido em base binário para um número decimal
+ 8- Conversão de base decimal para hexadecimal  ---> fazer a conversão de um número introduzido em base decimal para um número hexadecimal
+ 9- Conversão de hexadecimal para decimal  --------> fazer a conversão de um número introduzido em base hexadecimal para um número decimal
+ 10- Calcular Seno	---------------------------> Calcula o sen(x) introduzido o numero "x"
+ 11- Calcular Coseno	---------------------------> Calcula o cos(x) introduzido o numero "x"
+ 12- Raiz de um número(em inteiro)	-----------> Calcula a raíz de um número e devolve o resultado em inteiro
+ 13- Potência		---------------------------> Calcula a potência de um número
+ 16- Menu Ajuda		---------------------------> Redireciona-o para o menu onde se encontra
+ 17- Terminar		---------------------------> Encerra a calculadora
+
+Conversões:
+
+No caso das conversões entre bases, não é possivel realizar conversões de base binária para hexadecima e vice-versa.
+Para isso terá de converter primeiro uma dessas duas bases para decimal e de seguida converter de base decimal para 
+a base desejada.
+
+-Exemplo:
+Imaginemos que eu desejo converter um número de base binária para hexadecimal, nesse caso, eu começo por selecionar a 
+opção "7" para converter de binária para decimal, e, de seguida, seleciono a opção "8" para converter o número que 
+obtive em base decimal (resultante do numero de base binária que selecionei) para hexadecimal.
+
+
