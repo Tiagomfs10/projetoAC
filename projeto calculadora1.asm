@@ -1,14 +1,15 @@
 .data
 bemvindo: .asciiz"############# 		BEM-VINDO!			#############\n"
-menu: .asciiz"\nEscolha um numero associado á operação:\n 1- Soma\n 2- Subtração\n 3- Multiplicação\n 4- Divisão\n 5- Fatorial\n 6- Conversão de bases decimal para binário\n 7- Conversão de base binário para decimal\n 8- Conversão de base decimal para hexadecimal\n 9- Conversão de hexadecimal para decimal\n 10- Calcular Seno\n 11- Calcular Coseno\n 12- Raiz de um número(em inteiro)\n 13- Potência\n 16- Menu Ajuda\n 17- Terminar\n"
 resultadofinal: .asciiz"O resultado é: \n"
+menu: .asciiz"\nEscolha um numero associado á operação:\n 1- Soma\n 2- Subtração\n 3- Multiplicação\n 4- Divisão\n 5- Fatorial\n 6- Conversão de bases decimal para binário\n 7- Conversão de base binário para decimal\n 8- Conversão de base decimal para hexadecimal\n 9- Conversão de hexadecimal para decimal\n 10- Calcular Seno\n 11- Calcular Coseno\n 12- Raiz de um número(em inteiro)\n 13- Potência\n 14- Logaritmo base 2\n 15- Logaritmo base 10\n 16- Menu Ajuda\n 17- Terminar\n"
 num1: .asciiz"Escolha o primeiro numero: \n"
 num2: .asciiz"Escolha o segundo numero: \n"
 fator: .asciiz"Escolha o numero para o fatorial do mesmo: \n"
 ######	decimal para base 2
-msg1: .asciiz "insira um número (A > 0) : "
-msg2: .asciiz "insira (2) para concretizar a conversão em base binária: "
-msg3: .asciiz "\nResultado : "
+msgdec: .asciiz "insira um número (A > 0) : "
+msg2dec: .asciiz "insira (2) para concretizar a conversão em base binária: "
+msg3dec: .asciiz "\nResultado : "
+
 ###### binario para decimal
 msgbindec:.asciiz "Insira um numero em base binária (-2 para sair): "
 resultadobindec:.asciiz "\nResult: "
@@ -26,7 +27,7 @@ msg: .asciiz "insira número base 10 para converter em Hexadecimal: \n"
 resposta: .asciiz "Equivalente Hexadecimal: "
 resultado: .space 8
 #####	hexadecimal para decimal
-hexa: .space 4096
+hexa: .space 1024
 error_msg: .asciiz "O numero foi introduzido de forma incorreta, verifique se o numero em hexadecimal que introduziu tem um total de oito digitos com numeros entre 0 e 9 e e/ou a e f(letras pequenas).\n"
 start_msg: .asciiz "Introduza um numero em hexadecimal: 0x"
 resultadohexdec: .asciiz "A conversão do mesmo para decimal é: "
@@ -49,12 +50,26 @@ raizz:.asciiz"Escolha um numero para fazer a sua raiz: \n"
 numpotencia1:.asciiz "insira o numero base: \n"
 numpotencia2:.asciiz "insira o expoente do numero base: \n"
 ##### log 2
-
+spacelog2: .asciiz " "
+newlinelog2: .asciiz "\n"
+logexception: .asciiz "O logaritmo de 1 e sempre 0.\n"
+logexception2: .asciiz "O valor do logaritmo e: 1"
+logdoneprompt: .asciiz "O valor do logaritmo e: "
+logfailureprompt: .asciiz "ERRO eh negativo e/ou decimal ou eh indefinido.\n"
+enterint: .asciiz "Introduza um numero para fazer o logaritmo de base 2 do mesmo: \n"
+intinput: .word 0
 ######## log 10
-
+spacelog10: .asciiz " "
+newlinelog10: .asciiz "\n"
+logexceptionlog10: .asciiz "O logaritmo de 1 e sempre 0.\n"
+logexception2log10: .asciiz "O valor do logaritmo e: 2"
+logdonepromptlog10: .asciiz "O valor do logaritmo e: "
+logfailurepromptlog10: .asciiz "ERRO eh negativo e/ou decimal ou eh indefinido.\n"
+enterintlog10: .asciiz "Introduza um numero para fazer o logaritmo de base 10 do mesmo: \n"
+intinputlog10: .word 0
 ####### menu help
 localarquivo:.asciiz "C:/Users/tiago/OneDrive/Ambiente de Trabalho/Arquitetura de Computadores/menu help.txt"
-conteudoarquivo:.space 1024#bufer
+conteudoarquivo:.space 4096#bufer
 ###### desligar a calculadora
 ateaproxima:.asciiz"\n############# 		ATÉ A PRÓXIMA! 			#############\n"
 .text
@@ -83,6 +98,8 @@ li $s0,10
 li $s1,11
 li $s2,12
 li $s3,13
+li $s4,14
+li $s5,15
 li $s6,16
 li $s7,17
 
@@ -100,6 +117,8 @@ beq $t0,$s0,seno1
 beq $t0,$s1,cos
 beq $t0,$s2,raiz_int
 beq $t0,$s3,poten
+beq $t0,$s4,log2
+beq $t0,$s5,log10
 beq $t0,$s6,menu_help
 beq $t0,$s7,terminar
 
@@ -213,7 +232,7 @@ addi $s0,$zero,2
 addi $s1,$zero,10
 valorA:
 li $v0,4
-la $a0,msg1
+la $a0,msgdec
 syscall
 li $v0,5
 syscall
@@ -221,7 +240,7 @@ blt $v0,$zero,valorA
 move $t0,$v0
 valorB:
 li $v0,4
-la $a0,msg2
+la $a0,msg2dec
 syscall
 li $v0,5
 syscall
@@ -229,14 +248,13 @@ blt $v0,$s0,valorB
 bgt $v0,$s1,valorB
 add $t1,$zero,$v0
 li $v0,4
-la $a0,msg3
+la $a0,msg3dec
 syscall
 add $a0,$zero,$t0
 add $a1,$zero,$t1
 jal converter
-
-b While
-
+li $v0,10
+syscall
 converter:
 #a0=A
 #a1=B
@@ -256,7 +274,7 @@ sw $t3,0($sp) #guardar t3
 add $a0,$zero,$t4 # A/B
 add $a1,$zero,$s1 # B
 addi $s3,$s3,1
-jal converter  #chama converter 
+jal converter #chama converter
 end:
 lw $ra,0($sp)
 lw $s1,4($sp)
@@ -460,7 +478,7 @@ error:
 la $a0, error_msg
 li $v0, 4
 syscall
-b main4
+b main9
 exit:
 li $v0, 4
 la $a0, resultadohexdec
@@ -660,6 +678,133 @@ add $a0, $zero, $t2
 li $v0,1
 syscall #Print ans
 b While
+log2:
+.globl main14
+main14:
+li $v0,4
+la $a0,enterint
+syscall
+li $v0,5
+syscall
+sw $v0,intinput
+addi $t3,$zero,2 #base
+addi $t4,$zero,2 #expoente
+lw $t5,intinput #input
+beq $t3,$t5,exception2
+beq $t5,1,exception
+addi $t7,$zero,2
+logtwowhile:
+mul $t7,$t7,$t3
+beq $t7,$t5,logdone
+bgt $t7,$t5,logfailure
+addi $t4,$t4,1
+blt $t7,$t5,logtwowhile
+logdone:
+li $v0,4
+la $a0,logdoneprompt
+syscall
+li $v0,1
+move $a0,$t4
+syscall
+li $v0,4
+la $a0,newlinelog2
+syscall
+li $v0,4
+la $a0,newlinelog2
+syscall
+b While
+j main14
+logfailure:
+li $v0,4
+la $a0,logfailureprompt
+syscall
+j main14
+exception:
+li $v0,4
+la $a0,logexception
+syscall
+li $v0,4
+la $a0,newlinelog2
+syscall
+li $v0,4
+la $a0,newlinelog2
+syscall
+j main14
+exception2:
+li $v0,4
+la $a0,logexception2
+syscall
+li $v0,4
+la $a0,newlinelog2
+syscall
+li $v0,4
+la $a0,newlinelog2
+syscall
+j main14
+
+log10:
+.globl main15
+main15:
+li $v0,4
+la $a0,enterintlog10
+syscall
+li $v0,5
+syscall
+sw $v0,intinputlog10
+addi $t3,$zero,10 #base
+addi $t4,$zero,2 #expoente
+lw $t5,intinputlog10 #input
+beq $t3,$t5,exception2log10
+beq $t5,1,exceptionlog10
+addi $t7,$zero,10
+logtwowhilelog10:
+mul $t7,$t7,$t3
+beq $t7,$t5,logdonelog10
+bgt $t7,$t5,logfailurelog10
+addi $t4,$t4,1
+blt $t7,$t5,logtwowhilelog10
+logdonelog10:
+li $v0,4
+la $a0,logdonepromptlog10
+syscall
+li $v0,1
+move $a0,$t4
+syscall
+li $v0,4
+la $a0,newlinelog10
+syscall
+li $v0,4
+la $a0,newlinelog10
+syscall
+b While
+j main15
+logfailurelog10:
+li $v0,4
+la $a0,logfailurepromptlog10
+syscall
+j main15
+exceptionlog10:
+li $v0,4
+la $a0,logexceptionlog10
+syscall
+li $v0,4
+la $a0,newlinelog10
+syscall
+li $v0,4
+la $a0,newlinelog10
+syscall
+j main15
+exception2log10:
+li $v0,4
+la $a0,logexception2log10
+syscall
+li $v0,4
+la $a0,newlinelog10
+syscall
+li $v0,4
+la $a0,newlinelog10
+syscall
+j main15
 
 menu_help:
 .globl main16
@@ -673,7 +818,7 @@ move $a0,$s0 #copia o descritor para $a0
 
 li $v0,14 #ler conteudo referenciado em $a0
 la $a1,conteudoarquivo#buffer que armazena o conteudo
-li $a2,1024 #tamanho do buffer
+li $a2,4096 #tamanho do buffer
 syscall #leitura realizada
 
 li $v0,4 #imprimir arquivo
