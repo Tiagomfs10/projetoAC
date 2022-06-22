@@ -6,9 +6,15 @@ num1: .asciiz"Escolha o primeiro numero: \n"
 num2: .asciiz"Escolha o segundo numero: \n"
 fator: .asciiz"Escolha o numero para o fatorial do mesmo: \n"
 ######	decimal para base 2
-msgdec: .asciiz "insira um número (A > 0) : "
-msg2dec: .asciiz "insira (2) para concretizar a conversão em base binária: "
-msg3dec: .asciiz "\nResultado : "
+userInput:  .asciiz     "Please enter your integer: "
+binaryInput:    .asciiz "Here is the input in binary: "
+nl:         .asciiz     "\n"
+hexInput:   .asciiz     "Here is the input in hexadecimal: "
+binaryOutput:   .asciiz "Here is the output in binary: "
+hexOutput:  .asciiz     "Here is the output in hexadecimal: "
+hexDigit:   .asciiz     "0123456789ABCDEF"
+obuf:       .space      100
+obufe:
 
 ###### binario para decimal
 msgbindec:.asciiz "Insira um numero em base binária (-2 para sair): "
@@ -228,65 +234,90 @@ b for
 conver_dec_bin:
 .globl main6
 main6:
-addi $s0,$zero,2
-addi $s1,$zero,10
-valorA:
 li $v0,4
-la $a0,msgdec
+la $a0,userInput
 syscall
+
+# read user-input
 li $v0,5
 syscall
-blt $v0,$zero,valorA
-move $t0,$v0
-valorB:
+move $s0,$v0
+
+# output original in binary
+la $a0,binaryInput
+li $a1,32
+jal prtbin
+# isolate bits 12,13,14,15
+srl $s0,$s0,12
+andi $s0,$s0,0x0F
+b While
+
+# prtbin -- print in binary
+#
+# arguments:
+#   a0 -- output string
+#   a1 -- number of bits to output
+prtbin:
+li $a2,1                   # bit width of number base digit
+j  prtany
+
+# prthex -- print in hex
+#
+# arguments:
+#   a0 -- output string
+#   a1 -- number of bits to output
+#prthex:
+    #li      $a2,4                   # bit width of number base digit
+    #j       prtany
+
+# prtany -- print in given number base
+#
+# arguments:
+#   a0 -- output string
+#   a1 -- number of bits to output
+#   a2 -- bit width of number base digit
+#   s0 -- number to print
+#
+# registers:
+#   t0 -- current digit value
+#   t5 -- current remaining number value
+#   t6 -- output pointer
+#   t7 -- mask for digit
+prtany:
+li $t7,1
+sllv $t7,$t7,$a2             # get mask + 1
+subu $t7,$t7,1               # get mask for digit
+
+la $t6,obufe               # point one past end of buffer
+subu $t6,$t6,1               # point to last char in buffer
+sb $zero,0($t6)            # store string EOS
+
+move $t5,$s0                 # get number
+
+prtany_loop:
+and $t0,$t5,$t7             # isolate digit
+lb $t0,hexDigit($t0)       # get ascii digit
+
+subu $t6,$t6,1               # move output pointer one left
+sb $t0,0($t6)              # store into output buffer
+
+srlv $t5,$t5,$a2             # slide next number digit into lower bits
+sub $a1,$a1,$a2             # bump down remaining bit count
+bgtz $a1,prtany_loop         # more to do? if yes, loop
+
+# output string
 li $v0,4
-la $a0,msg2dec
 syscall
-li $v0,5
+# output the number
+move $a0,$t6                 # point to ascii digit string start
 syscall
-blt $v0,$s0,valorB
-bgt $v0,$s1,valorB
-add $t1,$zero,$v0
-li $v0,4
-la $a0,msg3dec
+# output newline
+la $a0,nl
 syscall
-add $a0,$zero,$t0
-add $a1,$zero,$t1
-jal converter
-li $v0,10
-syscall
-converter:
-#a0=A
-#a1=B
-addi $sp,$sp,-16
-sw $s3,12($sp) #counter,used to know
-#how many times we will pop from stack
-sw $s0,8($sp) #A
-sw $s1,4($sp) #B
-sw $ra,0($sp)
-add $s0,$zero,$a0
-add $s1,$zero,$a1
-beqz $s0,end
-div $t4,$s0,$s1 #t4=A/B
-rem $t3,$s0,$s1 #t3=A%B
-add $sp,$sp,-4
-sw $t3,0($sp) #guardar t3
-add $a0,$zero,$t4 # A/B
-add $a1,$zero,$s1 # B
-addi $s3,$s3,1
-jal converter #chama converter
-end:
-lw $ra,0($sp)
-lw $s1,4($sp)
-lw $s0,8($sp)
-lw $s3,12($sp)
-beqz $s3,done
-lw $a0,16($sp)
-li $v0,1
-syscall
-done:
-addi $sp,$sp,20
-jr $ra #retorna
+
+jr $ra                     # return
+
+
 
 conver_bin_dec:
 .globl main7
@@ -830,9 +861,6 @@ move $a0,$s0#para ficar seguro volta a copiar o descritor para $a0
 b While
 
 imprimir:
-#li $v0,4
-#la $a0,resultadofinal
-#syscall
 li $v0,1
 syscall
 
