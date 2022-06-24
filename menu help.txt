@@ -1,7 +1,7 @@
 
 ##################################################		Menu De Calculadora		#######################################################
 
-Seja bem vindo ao MENU HELP da calculadora.
+Seja bem vindo ao MENU HELP da calculadora!
 Ao iniciar a calculadora, aparecera um menu com varias funcionalidades da mesma com a mensagem "Escolha um numero associado a operacao, pelo que cada 
 uma faz uma operação com a explicacao da mesma abaixo descrita:
 
@@ -15,12 +15,15 @@ Escolha um numero associado a operacao:
  7- Conversao de base binario para decimal  -------> fazer a conversao de um numero introduzido em base binario para um numero decimal
  8- Conversao de base decimal para hexadecimal  ---> fazer a conversao de um numero introduzido em base decimal para um numero hexadecimal
  9- Conversao de hexadecimal para decimal  --------> fazer a conversao de um numero introduzido em base hexadecimal para um numero decimal
- 10- Calcular Seno	---------------------------> Calcula o sen(x) introduzido o numero "x"
- 11- Calcular Coseno	---------------------------> Calcula o cos(x) introduzido o numero "x"
- 12- Raiz de um número(em inteiro)	-----------> Calcula a raiz de um numero e devolve o resultado em inteiro
+ 10- Calcular Seno	---------------------------> Calcula o sen(x) introduzido o numero "x" em radianos
+ 11- Calcular Coseno	---------------------------> Calcula o cos(x) introduzido o numero "x" em radianos
+ 12- Raiz de um numero(em inteiro)	-----------> Calcula a raiz de um numero e devolve o resultado em inteiro
  13- Potencia		---------------------------> Calcula a potencia de um numero
  16- Menu Ajuda		---------------------------> Redireciona-o para o menu onde se encontra
- 17- Encerrar a calculadora	-------------------> Encerra a calculadora
+ 17- Encerrar		---------------------------> Encerra a calculadora
+
+Caso insira um numero diferente aos mostrados numenu inicial, aparecera uma mensagem a dizer "Numero nao associado a operacao!" e retorna ao menu 
+inicial.
 
 Conversoes:
 
@@ -33,4 +36,16 @@ Imaginemos que eu desejo converter um numero de base binaria para hexadecimal, n
 opcao "7" para converter de binaria para decimal, e, de seguida, seleciono a opcao "8" para converter o numero que 
 obtive em base decimal (resultante do numero de base binaria que selecionei) para hexadecimal.
 
+Execucao de uma operacao(exemplo):
+
+--------------------------------------------------
+|  Escolha o primeiro numero: (primeiro numero)  |	---------> le o primeiro numero que escolher
+|  Escolha o segundo numero: (segundo numero)    |	---------> le o segundo numero que escolher
+|  O resultado e: (resultado da operacao)   	 |	---------> Imprime o resultado da operacao
+|						 |
+|						 |
+--------------------------------------------------
+
+-Nota:
+O segundo numero pode ser necessario ou nao dependendo da operacao
 
