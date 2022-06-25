@@ -1,8 +1,11 @@
 .data
+frameBufferquadrado:.space 0x80000 # (512 ? 256)?? pixels
+menuquadrado:.asciiz "Escolha o comprimento do Lado do Quadrado (Em Pixels): "
+########
 bemvindo: .asciiz"############# 		BEM-VINDO!			#############\n"
 msg_de_erro:.asciiz"Número não associado à operação!"
 resultadofinal: .asciiz"O resultado é: "
-menu: .asciiz"\nEscolha um numero associado á operação:\n 1- Soma\n 2- Subtração\n 3- Multiplicação\n 4- Divisão\n 5- Fatorial\n 6- Conversão de bases decimal para binário\n 7- Conversão de base binário para decimal\n 8- Conversão de base decimal para hexadecimal\n 9- Conversão de hexadecimal para decimal\n 10- Calcular Seno\n 11- Calcular Coseno\n 12- Raiz de um número(em inteiro)\n 13- Potência\n 14- Logaritmo base 2\n 15- Logaritmo base 10\n 16- Interface gráfica(quadrado)\n 17- Interface gráfica(quadrado)18- Menu Ajuda\n 19- Encerrar\n"
+menu: .asciiz"\nEscolha um numero associado á operação:\n 1- Soma\n 2- Subtração\n 3- Multiplicação\n 4- Divisão\n 5- Fatorial\n 6- Conversão de bases decimal para binário\n 7- Conversão de base binário para decimal\n 8- Conversão de base decimal para hexadecimal\n 9- Conversão de hexadecimal para decimal\n 10- Calcular Seno\n 11- Calcular Coseno\n 12- Raiz de um número(em inteiro)\n 13- Potência\n 14- Logaritmo base 2\n 15- Logaritmo base 10\n 16- Interface gráfica(quadrado)\n 17- Interface gráfica(reta)\n 18- Menu Ajuda\n 19- Encerrar\n"
 num1: .asciiz"Escolha o primeiro numero: "
 num2: .asciiz"Escolha o segundo numero: "
 fator: .asciiz"Escolha o numero para o fatorial do mesmo: "
@@ -75,12 +78,7 @@ intinputlog10: .word 0
 localarquivo:.asciiz "C:/Users/tiago/OneDrive/Ambiente de Trabalho/Arquitetura de Computadores/menu help.txt"
 conteudoarquivo:.space 4096#bufer
 ##########quadrado
-frameBufferquadrado:.space 0x80000 # (512 ? 256)?? pixels
-menuquadrado:.asciiz "Escolha o comprimento do Lado do Quadrado (Em Pixels): \n"
-########
-frameBufferreta:.space 0x80000
-menureta:.asciiz "Escolha o comprimento da Reta (Em Pixels): \n"
-
+menureta:.asciiz "Escolha o comprimento da Reta (Em Pixels): "
 ###### desligar a calculadora
 ateaproxima:.asciiz"\n############# 		ATÉ A PRÓXIMA! 			#############\n"
 .text
@@ -870,9 +868,9 @@ li $v0,4
 la $a0,newlinelog10
 syscall
 j main15
+interfacequadrado:
 .globl main16
 main16:
-interfacequadrado:
 # A ferramenta de Bitmap Display tem de estar conectada com MARS e parametrizada para
 #   display width in pixels: 512
 #   display height in pixels: 512
@@ -923,7 +921,7 @@ quadradoYciclo:
 move $t3,$a2 # pointer  para o actual pixel para o ciclo de X; come?a no canto superior esquerdo
 
 quadradoXciclo:
-sb $t0,($t3)
+sw $t0,($t3)
 addiu $t3,$t3,4
 bne $t3,$t2,quadradoXciclo # Continua at? ao limite inserido pelo utilizador em x
 
@@ -961,7 +959,7 @@ beq $a1,$zero,reta_output
 beq $a3,$zero,reta_output 
 
 li $t0,-35000 # Cor: azul escuro
-la $t1,frameBufferreta
+la $t1,frameBufferquadrado
 add $a1,$a1,$a0
 add $a3,$a3,$a2
 sll $a0,$a0,2
@@ -979,7 +977,7 @@ retaYciclo:
 move $t3,$a2 
 
 retaXciclo:
-sb $t0,($t3)
+sw $t0,($t3)
 addiu $t3,$t3,4
 bne $t3,$t2,retaXciclo # Continua at? ao limite inserido pelo utilizador em x
 
@@ -989,6 +987,7 @@ bne $a2,$a3,retaYciclo
 
 reta_output:
 jr $ra
+
 menu_help:
 .globl main18
 main18:
